@@ -9,7 +9,7 @@
     "watch": "jake watch"
   },
   "devDependencies": {
-    "browserify": "^14.3.0",
+    "browserify": "^14.4.0",
     "cssmin": "^0.4.3",
     "file-watch": "^0.1.0",
     "ftp": "^0.3.10",
@@ -19,9 +19,9 @@
     "jstransformer-markdown-it": "^2.0.0",
     "less": "^2.7.2",
     "livereload": "^0.6.2",
-    "pug": "^2.0.0-beta11",
+    "pug": "^2.0.0-rc.3",
     "tsify": "^3.0.1",
-    "typescript": "^2.2.2"
+    "typescript": "^2.5.1"
   },
   "dependencies": {
     "statify": "^2.0.1"
