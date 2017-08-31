@@ -25,6 +25,7 @@ class Actor {
   public scale:Vector2 = new Vector2(1);
   public offset:Vector2 = new Vector2();
   public size:Vector2 = new Vector2(32);
+  public shape:string = "aabb";
   public rotation:number=0;
   public opacity:number=1;
   public parallax:number=1;
@@ -78,6 +79,9 @@ class Actor {
   get bottom() {
     return this.position.y + (this.size.y/2) * Math.abs(this.scale.y);
   }
+  get radius() {
+    return (this.size.x/2) * Math.abs(this.scale.x);
+  }
 
   update() {
     if (this.animation) {
@@ -129,35 +133,74 @@ class Actor {
       this.sprite.draw(this.frame, 0, this.offset);
     if (this.scene.game.debug) {
       let g = this.scene.game.ctx;
-      g.rotate(-this.rotation);      
-      g.strokeRect(-(this.size.x/2), -(this.size.y/2), this.size.x, this.size.y);
-      g.rotate(this.rotation);      
+      g.rotate(-this.rotation);
+      switch (this.shape) {
+        case "circle":
+          g.beginPath();
+          g.arc(0, 0, this.size.x/2, 0, 2*Math.PI);
+          g.stroke();
+          break;
+      
+        default:
+          g.strokeRect(-(this.size.x/2), -(this.size.y/2), this.size.x, this.size.y);
+          break;
+      }
+      g.rotate(this.rotation);
     }
   }
 
   overlapsWithPoint(v:Vector2) {
-    return v.x > this.left && v.y < this.right &&
-      v.y > this.top && v.y < this.bottom;
+    switch (this.shape) {
+      case "circle":
+        var l = Math.sqrt(Math.pow(this.position.x-v.x,2) + Math.pow(this.position.y-v.y,2));
+        return l < this.radius;
+    
+      default:
+        return v.x > this.left && v.y < this.right &&
+            v.y > this.top && v.y < this.bottom;
+    }
   }
   overlapsWith(actor:Actor) {
-    return this._overlap2D(this.top, this.left, this.bottom, this.right,
-      actor.top, actor.left, actor.bottom, actor.right);
+    switch (this.shape) {
+      case "circle":
+        return this._overlapCircle(
+          this.position.x, this.position.y, this.radius,
+          actor.position.x, actor.position.y, actor.radius
+        );
+    
+      default:
+        return this._overlap2D(this.top, this.left, this.bottom, this.right,
+          actor.top, actor.left, actor.bottom, actor.right);
+    }
   }
   snapToEdge(obstruction:Actor) {
-    var x=0,y=Infinity;
-    if (Math.abs(x+y) > Math.abs(obstruction.right - this.left)) {
-      x = obstruction.right - this.left; y = 0;
+    var x=0,y=Infinity,l;
+    switch (this.shape) {
+      case "circle":
+        x = this.position.x - obstruction.position.x;
+        y = this.position.y - obstruction.position.y;
+        l = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+        l /= this.radius + obstruction.radius;
+        x /= l; y /= l;
+        this.position.copyFrom(obstruction.position).addXY(x,y);
+        break;
+    
+      default:
+        if (Math.abs(x+y) > Math.abs(obstruction.right - this.left)) {
+          x = obstruction.right - this.left; y = 0;
+        }
+        if (Math.abs(x+y) > Math.abs(obstruction.left - this.right)) {
+          x = obstruction.left - this.right; y = 0;
+        }
+        if (Math.abs(x+y) > Math.abs(obstruction.bottom - this.top)) {
+          x = 0; y = obstruction.bottom - this.top;
+        }
+        if (Math.abs(x+y) > Math.abs(obstruction.top - this.bottom)) {
+          x = 0; y = obstruction.top - this.bottom;
+        }
+        this.position.addXY(x,y);
+        break;
     }
-    if (Math.abs(x+y) > Math.abs(obstruction.left - this.right)) {
-      x = obstruction.left - this.right; y = 0;
-    }
-    if (Math.abs(x+y) > Math.abs(obstruction.bottom - this.top)) {
-      x = 0; y = obstruction.bottom - this.top;
-    }
-    if (Math.abs(x+y) > Math.abs(obstruction.top - this.bottom)) {
-      x = 0; y = obstruction.top - this.bottom;
-    }
-    this.position.addXY(x,y);
   }
 
   setAnchor(x:number, y=x) {
@@ -203,6 +246,11 @@ class Actor {
       bx1:number, by1:number, bx2:number, by2:number) {
     return this._overlap1D(ax1, ax2, bx1, bx2) &&
       this._overlap1D(ay1, ay2, by1, by2);
+  }
+
+  private _overlapCircle(x1:number, y1:number, r1:number, x2:number, y2:number, r2:number) {
+    var l = Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+    return l < r1+r2;
   }
 
 }

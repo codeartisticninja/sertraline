@@ -22,12 +22,17 @@ class SpaceScene extends Scene {
 
   update() {
     super.update();
+    this.onOverlap(this.actorsByType["Ship"], this.actorsByType["PillSpawner"], this._shipMeetsActor, this);
   }
 
 
   /*
     _privates
   */
+
+  private _shipMeetsActor(ship:Ship, actor:Actor) {
+    ship.snapToEdge(actor);
+  }
 
 }
 export = SpaceScene;

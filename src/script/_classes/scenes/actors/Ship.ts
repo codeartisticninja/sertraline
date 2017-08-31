@@ -11,6 +11,7 @@ class Ship extends Actor {
 
   constructor(scene:Scene, obj:any) {
     super(scene, obj);
+    this.shape = "circle";
     this.addAnimation("be",  [ 0, 1, 2, 3, 4, 5, 6, 7]);
     this.playAnimation("be");
     this.momentum = .99;
