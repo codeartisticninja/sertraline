@@ -13,7 +13,7 @@ import Text        = require("./actors/Text");
 /**
  * Scene class
  * 
- * @date 13-aug-2017
+ * @date 31-aug-2017
  */
 
 class Scene {
@@ -29,6 +29,7 @@ class Scene {
   public boundCamera=true;
   public mouse:Vector2 = new Vector2();
   public mapData:any;
+  public backgroundColor:string;
 
   constructor(public game:Game, public mapUrl?:string) {
     this.size.set(game.canvas.width, game.canvas.height);
@@ -61,6 +62,7 @@ class Scene {
   loadMap() {
     var mapFolder = this.mapUrl.substr(0, this.mapUrl.lastIndexOf("/")+1);
     this.size.set(this.mapData.width*this.mapData.tilewidth, this.mapData.height*this.mapData.tileheight);
+    this.backgroundColor = this.mapData.backgroundcolor;
     for (var tileset of this.mapData.tilesets) {
       this.addSprite(new Sprite(tileset, mapFolder));
     }

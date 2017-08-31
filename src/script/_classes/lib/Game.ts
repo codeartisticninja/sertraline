@@ -20,7 +20,7 @@ if (!window.requestAnimationFrame) {
 /**
  * BaseGameApp class
  * 
- * @date 15-aug-2017
+ * @date 31-aug-2017
  */
 
 class Game {
@@ -65,7 +65,12 @@ class Game {
 
   render() {
     if (this.scene) {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      if (this.scene.backgroundColor) {
+        this.ctx.fillStyle = this.scene.backgroundColor;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      } else {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
       this.scene.render();
     } 
   }
