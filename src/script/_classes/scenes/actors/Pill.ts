@@ -1,44 +1,45 @@
 "use strict";
 import Actor   = require("../../lib/scenes/actors/Actor");
 import Scene   = require("../../lib/scenes/Scene");
+import Tween   = require("../../lib/utils/Tween");
 
 /**
- * Ship class
+ * Pill class
  */
 
-class Ship extends Actor {
+class Pill extends Actor {
+  public taken:boolean;
 
   constructor(scene:Scene, obj:any) {
     super(scene, obj);
     this.shape = "circle";
     this.addAnimation("be",  [ 0, 1, 2, 3, 4, 5, 6, 7]);
     this.playAnimation("be");
-    this.momentum = .99;
+    this.position.set(Math.random()*this.scene.size.x, -32);
+    this.angularVelocity = Math.random()*.08-.04;
+    this.velocity.set(Math.random()*8-4, Math.random()*8-4);
   }
 
   update() {
-    var joy = this.scene.game.joypad;
     var width = this.scene.game.canvas.width;
     var height = this.scene.game.canvas.height;
-    this.rotation += joy.dir.x * .25;
-    this.velocity.addXY(-Math.sin(this.rotation)*joy.dir.y, Math.cos(this.rotation)*joy.dir.y);
     super.update();
     if (this.right < 0) this.position.x += width + this.size.x;
     if (this.bottom < 0) this.position.y += height + this.size.y;
     if (this.left > width) this.position.x -= width + this.size.x;
     if (this.top > height) this.position.y -= height + this.size.y;
-    this.scene.camera.copyFrom(this.position).subtractXY(width/2, height/2);
   }
 
-  render() {
-    this.scene.game.ctx.strokeStyle = "cyan";
-    super.render();
+  take() {
+    new Tween(this.position, this.scene.actorsByType["Ship"][0].position.addXY(0,0,{}), 512, true);
+    new Tween(this.scale, { x:0, y:0 }, 512, true);
+    setTimeout(()=>{ this.scene.removeActor(this); }, 512);
+    this.taken = true;
   }
-
-
+  
   /*
     _privates
   */
 
 }
-export = Ship;
+export = Pill;

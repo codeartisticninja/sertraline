@@ -16,27 +16,43 @@
                  "visible":true,
                  "width":64,
                  "x":435,
-                 "y":270
+                 "y":300
                 }, 
                 {
                  "gid":129,
                  "height":64,
                  "id":2,
-                 "name":"",
+                 "name":"Anx",
+                 "properties":
+                    {
+                     "spawnType":"Anx"
+                    },
+                 "propertytypes":
+                    {
+                     "spawnType":"string"
+                    },
                  "rotation":0,
-                 "type":"AnxSpawner",
+                 "type":"Spawner",
                  "visible":true,
                  "width":64,
-                 "x":420,
-                 "y":45
+                 "x":480,
+                 "y":75
                 }, 
                 {
                  "gid":257,
                  "height":64,
                  "id":3,
-                 "name":"",
+                 "name":"Joy",
+                 "properties":
+                    {
+                     "spawnType":"Joy"
+                    },
+                 "propertytypes":
+                    {
+                     "spawnType":"string"
+                    },
                  "rotation":0,
-                 "type":"JoySpawner",
+                 "type":"Spawner",
                  "visible":true,
                  "width":64,
                  "x":405,
@@ -46,9 +62,17 @@
                  "gid":385,
                  "height":64,
                  "id":4,
-                 "name":"",
+                 "name":"Pill",
+                 "properties":
+                    {
+                     "spawnType":"Pill"
+                    },
+                 "propertytypes":
+                    {
+                     "spawnType":"string"
+                    },
                  "rotation":0,
-                 "type":"PillSpawner",
+                 "type":"Spawner",
                  "visible":true,
                  "width":64,
                  "x":540,
