@@ -8,7 +8,7 @@ import lazyJSON = require("../../utils/lazyJSON");
 /**
  * Actor class
  * 
- * @date 13-aug-2017
+ * @date 31-aug-2017
  */
 
 interface Animation {
@@ -127,9 +127,11 @@ class Actor {
   render() {
     if (this.sprite)
       this.sprite.draw(this.frame, 0, this.offset);
-    if (location.search.indexOf("debug") !== -1) {
+    if (this.scene.game.debug) {
       let g = this.scene.game.ctx;
+      g.rotate(-this.rotation);      
       g.strokeRect(-(this.size.x/2), -(this.size.y/2), this.size.x, this.size.y);
+      g.rotate(this.rotation);      
     }
   }
 

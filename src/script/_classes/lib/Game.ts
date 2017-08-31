@@ -27,6 +27,7 @@ class Game {
   public container:HTMLElement;
   public canvas:HTMLCanvasElement;
   public ctx:CanvasRenderingContext2D;
+  public debug:boolean;
   public loading=0;
   public loaded=0;
   public saveFile = new StorageFile("save.json");

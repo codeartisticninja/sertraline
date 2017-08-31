@@ -9,6 +9,7 @@ var game: MyGame;
 
 function init() {
   game = window["game"] = new MyGame("#game");
+  game.debug = location.search.indexOf("debug") !== -1;
 }
 
 if (location.search === "?nojs") {
