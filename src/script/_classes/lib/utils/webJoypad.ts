@@ -4,7 +4,7 @@ import Vector2 = require("./Vector2");
 /**
  * joypad module for unified game controls on the web
  * 
- * @date 28-aug-2017
+ * @date 01-sep-2017
  */
 if (!window.requestAnimationFrame) {
   window.requestAnimationFrame = webkitRequestAnimationFrame || function(cb:Function){ return setTimeout(cb, 32) };
@@ -459,7 +459,7 @@ module joypad {
     } else {
       joypad.dir.y = gamepad.axes[1] || 0;
     }
-    if (joypad.mode = "gc") {
+    if (joypad.mode === "gc") {
       joypad.fire = btn[0] || btn[1] || btn[2] || btn[3];
     } else {
       joypad.fire = btn[0] || btn[2];
