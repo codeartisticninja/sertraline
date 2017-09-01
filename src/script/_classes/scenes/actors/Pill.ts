@@ -2,13 +2,14 @@
 import Actor   = require("../../lib/scenes/actors/Actor");
 import Scene   = require("../../lib/scenes/Scene");
 import Tween   = require("../../lib/utils/Tween");
+import Vector2 = require("../../lib/utils/Vector2");
 
 /**
  * Pill class
  */
 
 class Pill extends Actor {
-  public taken:boolean;
+  public taken:Actor;
 
   constructor(scene:Scene, obj:any) {
     super(scene, obj);
@@ -24,17 +25,26 @@ class Pill extends Actor {
     var width = this.scene.game.canvas.width;
     var height = this.scene.game.canvas.height;
     super.update();
+    if (this.taken){
+      this.snapToEdge(this.taken);
+    }
     if (this.right < 0) this.position.x += width + this.size.x;
     if (this.bottom < 0) this.position.y += height + this.size.y;
     if (this.left > width) this.position.x -= width + this.size.x;
     if (this.top > height) this.position.y -= height + this.size.y;
   }
 
-  take() {
-    new Tween(this.position, this.scene.actorsByType["Ship"][0].position.addXY(0,0,{}), 512, true);
+  take(taker:Actor) {
+    new Tween(this.position, taker.position.addXY(0,0,<Vector2>{}), 512, true);
+    new Tween(this.scale, { x:0.5, y:0.5 }, 512, true);
+    this.taken = taker
+  }
+  
+  shoot(shooter:Actor) {
+    new Tween(this.position, shooter.position.addXY(0,0,<Vector2>{}), 512, true);
     new Tween(this.scale, { x:0, y:0 }, 512, true);
     setTimeout(()=>{ this.scene.removeActor(this); }, 512);
-    this.taken = true;
+    this.taken = shooter;
   }
   
   /*

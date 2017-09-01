@@ -18,7 +18,7 @@ import Anx         = require("./actors/Anx");
 
 class SpaceScene extends Scene {
   public game:myGame;
-  public ammo:number=0;
+  public ammo:Pill[]=[];
 
   constructor(game:myGame, map:string) {
     super(game, map);
@@ -37,17 +37,20 @@ class SpaceScene extends Scene {
 
   update() {
     super.update();
-    if (this.ammo > 0 && this.game.joypad.delta.fire === 1) {
-      this.spawn("Joy");
-      this.ammo--;
+    if (this.ammo.length > 0 && this.game.joypad.delta.fire === 1) {
+      let joy = this.spawn("Joy");
+      let pill = this.ammo.pop();
+      pill.shoot(joy);
     }
     this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Pill"], this._shipMeetsPill, this);
+    this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Pill"], this._anxMeetsPill, this);
+    this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Anx"], this._anxMeetsAnx, this);
     this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Anx"], this._shipMeetsAnx, this);
     this.onOverlap(this.actorsByType["Joy"], this.actorsByType["Anx"], this._joyMeetsAnx, this);
   }
 
   spawn(name:string) {
-    this.actorsByName[name].spawn();
+    return this.actorsByName[name].spawn();
   }
 
   spawnPill() {
@@ -63,13 +66,28 @@ class SpaceScene extends Scene {
 
   private _shipMeetsPill(ship:Ship, pill:Pill) {
     if (!pill.taken) {
-      pill.take();
-      this.ammo++;
+      pill.take(ship);
+      this.ammo.push(pill);
+    }
+  }
+
+  private _anxMeetsPill(anx:Anx, pill:Pill) {
+    if (!pill.taken) {
+      pill.shoot(anx);
+    }
+  }
+
+  private _anxMeetsAnx(anx1:Anx, anx2:Anx) {
+    if (!anx1.taken && anx1.scale.x < anx2.scale.x) {
+      anx1.take();
     }
   }
 
   private _shipMeetsAnx(ship:Ship, anx:Anx) {
     anx.scale.addXY(.1);
+    if (anx.scale.x > 16 && !anx.taken) {
+      anx.take()
+    };
   }
 
   private _joyMeetsAnx(joy:Joy, anx:Anx) {

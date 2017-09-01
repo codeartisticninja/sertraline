@@ -19,7 +19,7 @@ class Spawner extends Actor {
     var obj = JSON.parse(JSON.stringify(this.obj));
     obj.type = this.name
     obj.name = null;
-    this.scene.addActor(new this.scene.actorTypes[this.name](this.scene, obj));
+    return this.scene.addActor(new this.scene.actorTypes[this.name](this.scene, obj));
   }
 
   /*
