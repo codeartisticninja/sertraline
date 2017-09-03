@@ -5,6 +5,7 @@ import Sprite      = require("../lib/scenes/actors/Sprite");
 import Actor       = require("../lib/scenes/actors/Actor");
 import MediaPlayer = require("../lib/utils/MediaPlayer");
 import Script      = require("../lib/utils/Script");
+import Sound       = require("../lib/utils/Sound");
 
 import Ship        = require("./actors/Ship");
 import Spawner     = require("./actors/Spawner");
@@ -19,6 +20,7 @@ import Anx         = require("./actors/Anx");
 class SpaceScene extends Scene {
   public game:myGame;
   public ammo:Pill[]=[];
+  public sfx:Sound;
 
   constructor(game:myGame, map:string) {
     super(game, map);
@@ -28,6 +30,13 @@ class SpaceScene extends Scene {
     this.actorTypes["Pill"] = Pill;
     this.actorTypes["Anx"] = Anx;
     this.spawnPill = this.spawnPill.bind(this);
+
+    this.sfx = new Sound("./assets/sounds/sfx.wav");
+    this.sfx.setMark("explode", 0, .9);
+    this.sfx.setMark("pickup", 1, .9);
+    this.sfx.setMark("shoot", 2, .9);
+    this.sfx.setMark("hurt", 3, .9);
+    this.sfx.setMark("noammo", 4, .9);
   }
   
   reset() {
@@ -37,11 +46,16 @@ class SpaceScene extends Scene {
 
   update() {
     super.update();
-    if (this.ammo.length > 0 && this.game.joypad.delta.fire === 1) {
-      let joy = this.spawn("Joy");
-      let pill = this.ammo.pop();
-      pill.shoot(joy);
-      if (this.ammo.length) this.ammo[this.ammo.length-1].taken = this.actorsByType["Ship"][0];
+    if (this.game.joypad.delta.fire === 1) {
+      if (this.ammo.length > 0) {
+        let joy = this.spawn("Joy");
+        let pill = this.ammo.pop();
+        pill.shoot(joy);
+        if (this.ammo.length) this.ammo[this.ammo.length-1].taken = this.actorsByType["Ship"][0];
+        this.sfx.play("shoot");
+      } else {
+        this.sfx.play("noammo");
+      }
     }
     this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Pill"], this._shipMeetsPill, this);
     this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Pill"], this._anxMeetsPill, this);
@@ -55,15 +69,17 @@ class SpaceScene extends Scene {
   }
 
   spawnPill() {
+    this.clearAlarm(this._pillTO);
     this.spawn("Anx");
     this.spawn("Pill");
-    this.setAlarm(120, this.spawnPill);
+    this._pillTO = this.setAlarm(120, this.spawnPill);
   }
 
 
   /*
     _privates
   */
+  private _pillTO:any;
 
   private _shipMeetsPill(ship:Ship, pill:Pill) {
     if (!pill.taken) {
@@ -71,12 +87,14 @@ class SpaceScene extends Scene {
       pill.take(ship);
       if (this.ammo.length) this.ammo[this.ammo.length-1].taken = pill;
       this.ammo.push(pill);
+      this.sfx.play("pickup");
     }
   }
 
   private _anxMeetsPill(anx:Anx, pill:Pill) {
     if (!pill.taken) {
       pill.shoot(anx);
+      this.sfx.play("hurt");
     }
   }
 

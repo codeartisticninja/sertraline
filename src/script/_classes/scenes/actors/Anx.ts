@@ -37,6 +37,7 @@ class Anx extends Actor {
     setTimeout(()=>{ this.scene.removeActor(this); }, 512);
     this.scene.spawn("Pill");
     this.taken = true;
+    this.scene.sfx.play("explode");
   }
   
   /*
