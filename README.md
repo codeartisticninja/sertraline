@@ -1,6 +1,6 @@
-Game of August 2017
-===================
-It's a game..
+Sertraline
+==========
+Gimme them calming drugs..
 
 Credits
 -------
