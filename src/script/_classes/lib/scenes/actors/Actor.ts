@@ -8,7 +8,7 @@ import lazyJSON = require("../../utils/lazyJSON");
 /**
  * Actor class
  * 
- * @date 31-aug-2017
+ * @date 02-sep-2017
  */
 
 interface Animation {
@@ -182,7 +182,7 @@ class Actor {
         l = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
         l /= this.radius + obstruction.radius;
         x /= l; y /= l;
-        this.position.copyFrom(obstruction.position).addXY(x,y);
+        this.position.copyFrom(obstruction.position).addXY(x||0,y||0);
         break;
     
       default:

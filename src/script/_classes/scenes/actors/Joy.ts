@@ -18,11 +18,17 @@ class Joy extends Actor {
   }
 
   update() {
+    var width = this.scene.game.canvas.width;
+    var height = this.scene.game.canvas.height;
     this.opacity -= .02;
+    super.update();
+    if (this.right < 0) this.position.x += width + this.size.x;
+    if (this.bottom < 0) this.position.y += height + this.size.y;
+    if (this.left > width) this.position.x -= width + this.size.x;
+    if (this.top > height) this.position.y -= height + this.size.y;
     if (this.opacity <= 0.1) {
       this.scene.removeActor(this);
     }
-    super.update();
   }
 
 

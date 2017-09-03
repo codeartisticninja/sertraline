@@ -21,7 +21,11 @@ class Ship extends Actor {
     var width = this.scene.game.canvas.width;
     var height = this.scene.game.canvas.height;
     this.rotation += joy.dir.x * .25;
-    this.velocity.addXY(-Math.sin(this.rotation)*joy.dir.y, Math.cos(this.rotation)*joy.dir.y);
+    if (joy.dir.y < 0) {
+      this.velocity.addXY(-Math.sin(this.rotation)*joy.dir.y, Math.cos(this.rotation)*joy.dir.y);
+    } else {
+      this.velocity.magnitude -= joy.dir.y;
+    }
     super.update();
     if (this.right < 0) this.position.x += width + this.size.x;
     if (this.bottom < 0) this.position.y += height + this.size.y;

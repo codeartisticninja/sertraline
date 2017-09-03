@@ -41,6 +41,7 @@ class SpaceScene extends Scene {
       let joy = this.spawn("Joy");
       let pill = this.ammo.pop();
       pill.shoot(joy);
+      if (this.ammo.length) this.ammo[this.ammo.length-1].taken = this.actorsByType["Ship"][0];
     }
     this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Pill"], this._shipMeetsPill, this);
     this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Pill"], this._anxMeetsPill, this);
@@ -66,7 +67,9 @@ class SpaceScene extends Scene {
 
   private _shipMeetsPill(ship:Ship, pill:Pill) {
     if (!pill.taken) {
+      pill.velocity.set(0);
       pill.take(ship);
+      if (this.ammo.length) this.ammo[this.ammo.length-1].taken = pill;
       this.ammo.push(pill);
     }
   }
@@ -85,7 +88,10 @@ class SpaceScene extends Scene {
 
   private _shipMeetsAnx(ship:Ship, anx:Anx) {
     anx.scale.addXY(.1);
-    if (anx.scale.x > 16 && !anx.taken) {
+    if (anx.scale.x > 2.2) {
+      if (this.ammo.length) this.ammo.pop().taken=null;
+    };
+    if (anx.scale.x > 32 && !anx.taken) {
       anx.take()
     };
   }
