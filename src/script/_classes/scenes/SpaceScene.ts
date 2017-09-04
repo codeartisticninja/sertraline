@@ -31,7 +31,7 @@ class SpaceScene extends Scene {
     this.actorTypes["Anx"] = Anx;
     this.spawnPill = this.spawnPill.bind(this);
 
-    this.sfx = new Sound("./assets/sounds/sfx.wav");
+    this.sfx = new Sound("./assets/sounds/sfx2.wav");
     this.sfx.setMark("explode", 0, .9);
     this.sfx.setMark("pickup", 1, .9);
     this.sfx.setMark("shoot", 2, .9);
