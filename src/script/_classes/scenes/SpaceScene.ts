@@ -115,7 +115,8 @@ class SpaceScene extends Scene {
     if (!anx.taken) {
       anx.take();
       this.removeActor(joy);
-      if (this.ammo.length < 128) this.spawn("Pill");      
+      if (this.ammo.length < 128) this.spawn("Pill");
+      this.game.trackEvent("boom");
     }
   }
 
