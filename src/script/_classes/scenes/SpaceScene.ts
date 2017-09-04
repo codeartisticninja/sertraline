@@ -29,7 +29,7 @@ class SpaceScene extends Scene {
     this.actorTypes["Joy"] = Joy;
     this.actorTypes["Pill"] = Pill;
     this.actorTypes["Anx"] = Anx;
-    this.spawnPill = this.spawnPill.bind(this);
+    this.challenge = this.challenge.bind(this);
 
     this.sfx = new Sound("./assets/sounds/sfx2.wav");
     this.sfx.setMark("explode", 0, .9);
@@ -41,38 +41,37 @@ class SpaceScene extends Scene {
   
   reset() {
     super.reset();
-    this.setAlarm(12, this.spawnPill);
+    this.setAlarm(12, this.challenge);
   }
 
   update() {
     super.update();
     if (this.game.joypad.delta.fire === 1) {
-      if (this.ammo.length > 0) {
-        let joy = this.spawn("Joy");
-        let pill = this.ammo.pop();
-        pill.shoot(joy);
-        if (this.ammo.length) this.ammo[this.ammo.length-1].taken = this.actorsByType["Ship"][0];
-        this.sfx.play("shoot");
-      } else {
-        this.sfx.play("noammo");
-      }
+      this.actorsByType["Ship"][0].shoot();
     }
-    this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Pill"], this._shipMeetsPill, this);
     this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Pill"], this._anxMeetsPill, this);
     this.onOverlap(this.actorsByType["Anx"], this.actorsByType["Anx"], this._anxMeetsAnx, this);
     this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Anx"], this._shipMeetsAnx, this);
     this.onOverlap(this.actorsByType["Joy"], this.actorsByType["Anx"], this._joyMeetsAnx, this);
+    this.onOverlap(this.actorsByType["Ship"], this.actorsByType["Pill"], this._shipMeetsPill, this);
   }
 
   spawn(name:string) {
     return this.actorsByName[name].spawn();
   }
 
-  spawnPill() {
+  challenge() {
     this.clearAlarm(this._pillTO);
-    this.spawn("Anx");
-    this.spawn("Pill");
-    this._pillTO = this.setAlarm(120, this.spawnPill);
+    if (this.actors.length < 1024) {
+      this.spawn("Pill");
+      for (let pill of this.ammo) {
+        this.spawn("Anx");
+      }
+      this._pillTO = this.setAlarm(120, this.challenge);
+    } else {
+      this.actorsByType["Ship"][0].shoot();
+      this._pillTO = this.setAlarm(12, this.challenge);
+    }
   }
 
 
@@ -118,6 +117,7 @@ class SpaceScene extends Scene {
     if (!anx.taken) {
       anx.take();
       this.removeActor(joy);
+      if (this.ammo.length < 128) this.spawn("Pill");      
     }
   }
 

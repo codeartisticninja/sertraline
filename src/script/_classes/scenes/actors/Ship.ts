@@ -1,19 +1,24 @@
 "use strict";
 import Actor   = require("../../lib/scenes/actors/Actor");
 import Scene   = require("../../lib/scenes/Scene");
+import SpaceScene = require("../SpaceScene");
 
 /**
  * Ship class
  */
 
 class Ship extends Actor {
+  public scene:SpaceScene;
 
-  constructor(scene:Scene, obj:any) {
+  constructor(scene:SpaceScene, obj:any) {
     super(scene, obj);
     this.shape = "circle";
     this.addAnimation("be",  [ 0, 1, 2, 3, 4, 5, 6, 7]);
     this.playAnimation("be");
     this.momentum = .99;
+    this.order = 512;
+    this.position.set(this.scene.size.x/2,-this.size.y/2);
+    this.velocity.set(0,-4);
   }
 
   update() {
@@ -38,6 +43,19 @@ class Ship extends Actor {
     this.scene.game.ctx.strokeStyle = "cyan";
     super.render();
   }
+
+  shoot() {
+    let scene = this.scene;
+    if (scene.ammo.length > 0) {
+      let joy = scene.spawn("Joy");
+      let pill = scene.ammo.pop();
+      pill.shoot(joy);
+      if (scene.ammo.length) scene.ammo[scene.ammo.length-1].taken = scene.actorsByType["Ship"][0];
+      scene.sfx.play("shoot");
+    } else {
+      scene.sfx.play("noammo");
+    }
+}
 
 
   /*

@@ -19,6 +19,7 @@ class Anx extends Actor {
     this.position.set(-32, Math.random()*this.scene.size.y);
     this.angularVelocity = Math.random()*.08-.04;
     this.velocity.set(Math.random()*8-4, Math.random()*8-4);
+    this.order = 1024;
   }
 
   update() {
@@ -35,7 +36,6 @@ class Anx extends Actor {
     new Tween(this, { opacity:0 }, 512, true);
     new Tween(this.scale, { x:2, y:2 }, 512, true);
     setTimeout(()=>{ this.scene.removeActor(this); }, 512);
-    this.scene.spawn("Pill");
     this.taken = true;
     this.scene.sfx.play("explode");
   }

@@ -15,6 +15,7 @@ class Joy extends Actor {
     this.position.copyFrom(this.scene.actorsByType["Ship"][0].position);
     this.rotation = this.scene.actorsByType["Ship"][0].rotation;
     this.velocity.set(Math.sin(this.rotation)*16, -Math.cos(this.rotation)*16);
+    this.order = 4096;
   }
 
   update() {
