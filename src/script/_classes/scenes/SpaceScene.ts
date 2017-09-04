@@ -64,9 +64,6 @@ class SpaceScene extends Scene {
     this.clearAlarm(this._pillTO);
     if (this.actors.length < 1024) {
       this.spawn("Pill");
-      for (let pill of this.ammo) {
-        this.spawn("Anx");
-      }
       this._pillTO = this.setAlarm(120, this.challenge);
     } else {
       this.actorsByType["Ship"][0].shoot();
@@ -87,6 +84,7 @@ class SpaceScene extends Scene {
       if (this.ammo.length) this.ammo[this.ammo.length-1].taken = pill;
       this.ammo.push(pill);
       this.sfx.play("pickup");
+      this.spawn("Anx");
     }
   }
 
