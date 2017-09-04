@@ -3,6 +3,15 @@
  "infinite":false,
  "layers":[
         {
+         "image":"..\/backgrounds\/neuron-map.jpg",
+         "name":"background",
+         "opacity":1,
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "draworder":"topdown",
          "name":"objects",
          "objects":[
