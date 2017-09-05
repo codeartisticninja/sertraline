@@ -64,6 +64,7 @@ class SpaceScene extends Scene {
     this.clearAlarm(this._pillTO);
     if (this.actors.length < 1024) {
       this.spawn("Pill");
+      if (!this.actorsByType["Anx"]) this.spawn("Anx");
       if (this.actorsByType["Anx"].length === 0) this.spawn("Anx");
       this._pillTO = this.setAlarm(120, this.challenge);
     } else {
