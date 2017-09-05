@@ -32,6 +32,11 @@ class Anx extends Actor {
     if (this.top > height) this.position.y -= height + this.size.y;
   }
 
+  render() {
+    this.scene.game.ctx.strokeStyle = "red";
+    super.render();
+  }
+
   take() {
     new Tween(this, { opacity:0 }, 512, true);
     new Tween(this.scale, { x:2, y:2 }, 512, true);

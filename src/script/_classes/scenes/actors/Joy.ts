@@ -32,6 +32,11 @@ class Joy extends Actor {
     }
   }
 
+  render() {
+    this.scene.game.ctx.strokeStyle = "white";
+    super.render();
+  }
+
 
   /*
     _privates

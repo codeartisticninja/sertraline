@@ -40,7 +40,7 @@ class Ship extends Actor {
   }
 
   render() {
-    this.scene.game.ctx.strokeStyle = "cyan";
+    this.scene.game.ctx.strokeStyle = "green";
     super.render();
   }
 

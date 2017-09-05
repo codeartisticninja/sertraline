@@ -41,6 +41,11 @@ class Pill extends Actor {
     if (this.top > height) this.position.y -= height + this.size.y;
   }
 
+  render() {
+    this.scene.game.ctx.strokeStyle = "cyan";
+    super.render();
+  }
+
   take(taker:Actor) {
     // new Tween(this.position, taker.position.addXY(0,0,<Vector2>{}), 512, true);
     new Tween(this.scale, { x:0.5, y:0.5 }, 512, true);
