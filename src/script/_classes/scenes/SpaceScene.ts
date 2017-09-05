@@ -85,7 +85,7 @@ class SpaceScene extends Scene {
       if (this.ammo.length) this.ammo[this.ammo.length-1].taken = pill;
       this.ammo.push(pill);
       this.sfx.play("pickup");
-      this.spawn("Anx");
+      if (this.ammo.length < 14) this.spawn("Anx");
     }
   }
 
