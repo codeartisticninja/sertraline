@@ -10,6 +10,7 @@ import Vector2 = require("../../lib/utils/Vector2");
 
 class Pill extends Actor {
   public taken:Actor;
+  public takenOffset:Vector2;
 
   constructor(scene:Scene, obj:any) {
     super(scene, obj);
@@ -26,12 +27,16 @@ class Pill extends Actor {
     var height = this.scene.game.canvas.height;
     super.update();
     if (this.taken){
-      this.velocity.copyFrom(this.taken.velocity);
       this._v.copyFrom(this.position).subtract(this.taken.position).magnitude -= this.taken.size.x;
       if (this._v.magnitude > this.scene.size.y/2) {
-        this.velocity.magnitude = this.size.x/4;
+        if (this.takenOffset) {
+          this.position.copyFrom(this.taken.position).add(this.takenOffset);
+        } else {
+          this.takenOffset = new Vector2();
+          this.takenOffset.copyFrom(this.position).subtract(this.taken.position);
+        }
       } else {
-        this.velocity.magnitude = 1;
+        this.takenOffset = null;
         this.snapToEdge(this.taken);
       }
     }
@@ -49,6 +54,7 @@ class Pill extends Actor {
   take(taker:Actor) {
     // new Tween(this.position, taker.position.addXY(0,0,<Vector2>{}), 512, true);
     new Tween(this.scale, { x:0.5, y:0.5 }, 512, true);
+    this.velocity.set(0);
     this.taken = taker
   }
   
