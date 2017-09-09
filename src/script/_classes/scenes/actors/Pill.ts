@@ -10,7 +10,6 @@ import Vector2 = require("../../lib/utils/Vector2");
 
 class Pill extends Actor {
   public taken:Actor;
-  public takenOffset:Vector2;
 
   constructor(scene:Scene, obj:any) {
     super(scene, obj);
@@ -27,23 +26,24 @@ class Pill extends Actor {
     var height = this.scene.game.canvas.height;
     super.update();
     if (this.taken){
-      this._v.copyFrom(this.position).subtract(this.taken.position).magnitude -= this.taken.size.x;
-      if (this._v.magnitude > this.scene.size.y/2) {
-        if (this.takenOffset) {
-          this.position.copyFrom(this.taken.position).add(this.takenOffset);
-        } else {
-          this.takenOffset = new Vector2();
-          this.takenOffset.copyFrom(this.position).subtract(this.taken.position);
-        }
-      } else {
-        this.takenOffset = null;
+      this.order = this.taken.order + 1;
+      if (this.taken.scale.x > .5) this.order = 0;
+      this._v.copyFrom(this.position).subtract(this.taken.position);
+      if (this._v.x > width/2) this.position.x = this.taken.position.x + width;
+      if (this._v.y > height/2) this.position.y = this.taken.position.y + height;
+      if (this._v.x < -width/2) this.position.x = this.taken.position.x - width;
+      if (this._v.y < -height/2) this.position.y = this.taken.position.y - height;
+    }
+    if (this.right < 0) this.position.x += width + this.size.x * this.scale.x;
+    if (this.bottom < 0) this.position.y += height + this.size.y * this.scale.y;
+    if (this.left > width) this.position.x -= width + this.size.x * this.scale.x;
+    if (this.top > height) this.position.y -= height + this.size.y * this.scale.y;
+    if (this.taken){
+      this._v.copyFrom(this.position).subtract(this.taken.position);
+      if (this._v.magnitude < height/2) {
         this.snapToEdge(this.taken);
       }
     }
-    if (this.right < 0) this.position.x += width + this.size.x;
-    if (this.bottom < 0) this.position.y += height + this.size.y;
-    if (this.left > width) this.position.x -= width + this.size.x;
-    if (this.top > height) this.position.y -= height + this.size.y;
   }
 
   render() {
