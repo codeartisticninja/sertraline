@@ -4,22 +4,22 @@
 /**
  * Sound class
  * 
- * @date 19-aug-2017
+ * @date 19-aug-2017 10-jan-2018
  */
 
 class Sound {
-  static enabled=true;
-  static volume=1;
-  static ctx:AudioContext;
-  gainNode:GainNode;
-  mainNode:AudioNode;
-  file:string;
-  source:AudioBufferSourceNode;
-  buffer:AudioBuffer;
+  static enabled = true;
+  static volume = 1;
+  static ctx: AudioContext;
+  gainNode: GainNode;
+  mainNode: AudioNode;
+  file: string;
+  source: AudioBufferSourceNode;
+  buffer: AudioBuffer;
   marks = {};
-  oneInstance:boolean;
+  oneInstance: boolean;
 
-  constructor(src:string, cb?:Function) {
+  constructor(src: string, cb?: Function) {
     if (!Sound.ctx) {
       Sound.ctx = new (window["AudioContext"] || window["webkitAudioContext"])();
     }
@@ -29,7 +29,7 @@ class Sound {
     this.mainNode = this.gainNode;
 
     this.setMark("_all", 0);
-    this.load(src, ()=>{
+    this.load(src, () => {
       if (this._playOnLoad) {
         this.play(this._playOnLoad);
       }
@@ -37,15 +37,15 @@ class Sound {
     });
   }
 
-  load(src=this.file, cb?:Function) {
-    if (!Sound.enabled) return;
+  load(src = this.file, cb?: Function) {
+    if (!Sound.enabled) return cb && cb();
     this.file = src;
     var req = new XMLHttpRequest();
     req.open("GET", src, true);
     req.responseType = "arraybuffer";
     req.onload = () => {
       var data = req.response;
-      Sound.ctx.decodeAudioData(data, (buffer)=>{
+      Sound.ctx.decodeAudioData(data, (buffer) => {
         this.buffer = buffer;
         cb && cb();
       });
@@ -53,7 +53,8 @@ class Sound {
     req.send();
   }
 
-  play(mark="_all", loop=false) {
+  play(mark = "_all", loop = false) {
+    if (!Sound.enabled) return;
     if (this.source && this.oneInstance) {
       this.source.stop();
     }
@@ -66,11 +67,11 @@ class Sound {
     this.source.buffer = this.buffer;
     this.source.start(0, this.marks[mark].start, this.marks[mark].duration);
     if (loop && this.source.addEventListener) {
-      this.source.addEventListener("ended", ()=>{
+      this.source.addEventListener("ended", () => {
         this.source && this.play(mark, loop);
       })
     }
-    this._playOnLoad=null;
+    this._playOnLoad = null;
   }
 
   stop() {
@@ -81,10 +82,10 @@ class Sound {
       }
       this.source = null;
     }
-    this._playOnLoad=null;
+    this._playOnLoad = null;
   }
 
-  setMark(name:string, start:number, duration?:number) {
+  setMark(name: string, start: number, duration?: number) {
     this.marks[name] = {
       start: start,
       duration: duration
@@ -95,6 +96,6 @@ class Sound {
   /*
     _privates
   */
-  private _playOnLoad:string;
+  private _playOnLoad: string;
 }
 export = Sound;
