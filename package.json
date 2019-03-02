@@ -18,8 +18,8 @@
     "jsmin": "^1.0.1",
     "jstransformer-markdown-it": "^2.0.0",
     "less": "^2.7.2",
-    "livereload": "^0.6.2",
-    "pug": "^2.0.0-rc.3",
+    "livereload": "^0.7.0",
+    "pug": "^2.0.3",
     "tsify": "^3.0.1",
     "typescript": "^2.5.1"
   },
